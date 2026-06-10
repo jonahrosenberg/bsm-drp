@@ -1,0 +1,445 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm,amsmath,amssymb,amsfonts}
+\usepackage{thmtools,mathtools}
+\usepackage{caption,subcaption}
+\usepackage{epsfig,graphicx,graphics,color,tikz,tikz-cd,tcolorbox}
+\usepackage{enumerate,enumitem}
+\usepackage{gensymb}
+\usepackage[sort,nocompress]{cite}
+\definecolor{blue}{HTML}{118AB2}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,        % color of internal links (change box color with linkbordercolor)
+    citecolor=magenta,         % color of links to bibliography
+    filecolor=magenta,     % color of file links
+    urlcolor=blue,         % color of external links
+    linktoc=all
+}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{conj}{Conjecture}
+\newtheorem{claim}{Claim}
+\newtheorem{prob}{Problem}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{note}[thm]{Notes}
+\newtheorem{ex}[thm]{Example}
+\newtheorem{obj}{Objective}
+\newtheorem{rem}{Remark}
+
+%%% New definitions -- reals, epsilons, blah blah.
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\bZ}{\mathbb{Z}}
+\newcommand{\bK}{\mathbb{K}}
+\newcommand{\bF}{\mathbb{F}}
+\newcommand{\bE}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cU}{\mathcal{U}}
+
+%%% Commenting macros.
+\def\final{0}  % set this to 1 to get a comment-free version
+\def\iflong{\iffalse}
+\ifnum\final=0  %namely if we allow comments in the output
+%\usepackage[dvipsnames]{xcolor}
+\newcommand{\ta}[1]{{\color{red}[{\tiny \textbf{TA:} \bf #1}]\marginpar{\color{red}*}}}
+\newcommand{\student}[1]{{\color{orange}[{\tiny \textbf{Student:} \bf #1}]\marginpar{\color{orange}*}}}
+\else % in this case [final=1] we don't want any comments to show
+\newcommand{\ta}[1]{}
+\newcommand{\student}[1]{}
+\fi
+
+%%% Here comes the paper.
+
+\begin{document}
+
+\begin{center}
+{\large \textsc{Budapest Semesters in Mathematics}}
+\smallskip
+
+Directed Reading Program (Fall 2025)
+\vskip 2em
+
+{\Large \bfseries Classifying Constructability of Regular $n$-gons using Algebra.
+}
+\vskip 1em
+Jonah Rosenberg
+\smallskip
+
+Teaching assistant: Balázs Attila Forman
+\end{center} 
+
+%%%%%%%%%%%%%%%%
+\section{Introduction}
+%%%%%%%%%%%%%%%%
+
+In this paper, I seek to prove that a regular $n$-gon is constructible if and only if $n = 2^kp_1p_2\dots p_t$ where the $p_i$'s are distinct Fermat primes, and $k \in \N \cup \{0\}$. 
+
+\section{Constructability of Regular $n$-gons}
+
+Suppose we are playing a game where we are given two points, $P$ and $Q$, a compass, and a straightedge. Given just these objects, it may seem obvious that we can construct the line $\overline{PQ} = l(P,Q)$. 
+\vspace{5mm}
+\begin{center}
+\begin{tikzpicture}
+    \draw (0,0) -- (4,0);
+
+  % Mark and label point P at (0,0)
+  \filldraw (0,0) circle (2pt) node[below] {$P$};
+
+  % Mark and label point Q at (4,0)
+  \filldraw (4,0) circle (2pt) node[below] {$Q$};
+\end{tikzpicture}
+\end{center}
+In addition, we can construct a circle with center $P$ and radius $|PQ|$. We'll call this circle $C(P,Q)$.
+
+\begin{center}
+\begin{tikzpicture}[scale=.5]
+  % Define coordinates for P and Q
+  \coordinate (P) at (0,0);
+  \coordinate (Q) at (3,2);
+
+  % Draw axes
+  \draw[->] (-4,0) -- (4,0) node[right] {$x$};
+  \draw[->] (0,-4) -- (0,4) node[above] {$y$};
+
+  % Draw circle centered at P with radius |PQ|
+  \draw (P) circle ({veclen(3,2)});
+
+  % Draw and label P
+  \fill (P) circle (2pt) node[below left] {$P$};
+
+  % Draw and label Q
+  \fill (Q) circle (2pt) node[above right] {$Q$};
+
+  % Optionally, draw line segment PQ to visualize radius
+  \draw[dashed] (P) -- (Q);
+\end{tikzpicture}
+\end{center}
+So now we will start with two points in the Euclidean plane. Without loss of generality, consider these points $0,1 \in \C$. We can define some other points as follows:
+\begin{defn} A point is \textbf{constructible} if its the intersection of lines and/or circles as formed above. A length $l$ is \textbf{constructible} if there exists constructible points $P, Q$ such that $|PQ| = l$. An angle $\theta$ is \textbf{constructible} if there exists constructible points $P, Q, R$ with $\angle PQR = \theta$. 
+\end{defn}
+
+\begin{rem}
+    We may realize that a point $\alpha$ is constructible $\iff$ $\alpha = a + bi$ for $a,b$ constructible numbers:
+
+    \begin{center}
+\begin{tikzpicture}[scale=1]
+    % Draw axes
+    \draw[->] (-0.5,0) -- (3,0) node[right] {$x$};
+    \draw[->] (0,-0.5) -- (0,3) node[above] {$y$};
+
+    % Points on axes
+    \coordinate (A) at (2,0);
+    \coordinate (B) at (0,2);
+
+    % Draw points and labels
+    \fill (A) circle (2pt) node[below] {$a$};
+    \fill (B) circle (2pt) node[left] {$b$};
+
+    % Draw vertical line from a and horizontal line from b
+    \draw[dashed] (A) -- (2,2);
+    \draw[dashed] (B) -- (2,2);
+
+    % Intersection point
+    \coordinate (Alpha) at (2,2);
+    \fill (Alpha) circle (2pt) node[above right] {$\alpha$};
+\end{tikzpicture}
+\end{center}
+\end{rem}
+
+
+
+
+\begin{claim}
+    If $\alpha, \beta$ are constructible points: \begin{itemize}
+        \item $\alpha + \beta$ is constructible,
+        \item $|\alpha|$ is constructible,
+        \item $n\alpha$ is constructible for all $n$.
+    \end{itemize}
+\end{claim}
+
+\begin{proof}
+    Assume $\alpha$ is the point on the $x$-axis at coordinate $(\alpha, 0)$ and $\beta$ is a point at $(\beta, 0)$. We want to construct $(\alpha + \beta, 0)$. Take the point at $1$ as a "unit length". If $\alpha$ is constructible, we can draw a segment of length $\alpha$ starting from $0$, and similarly, we can draw a segment of length $\beta$. Place the segment of length $\beta$ starting at the point $\alpha$, and the end point of this segment of length $\beta$ starting at $\alpha$ will be exactly at $\alpha + \beta$. \checkmark
+
+If $\alpha \geq 0$, then we trivially construct $|\alpha|$. If $\alpha < 0$, then we can just show that $-\alpha$ is constructible. We do this by drawing a line through $0$ and $\alpha$. Then we draw a circle centered at $0$ with radius equal to that distance. The intersection of the circle with the $x$-axis is at $-\alpha$. \checkmark
+
+If $\alpha$ is constructible, we can draw a segment of length $\alpha$. To get $2\alpha$, we can simply place another segment of length $\alpha$ end to end along the same line. For $3\alpha$, we place a third segment of length $\alpha$. So $n\alpha$ is just the sum of $\alpha$ repeated $n$ times. \checkmark\
+\end{proof}
+
+
+
+
+\begin{rem}
+    For $r > 0$, we have $r$ is constructible as a length $\iff$ $r$ is constructible as a point.
+\end{rem}
+
+\begin{rem}
+    An angle $\theta$ is constructible $\iff$ cos$\theta$ + $i$sin$\theta$ is constructible $\iff$ cos$\theta$ is constructible.
+\begin{center}
+\begin{tikzpicture}[scale=2.5]
+
+% Draw axes
+\draw[->] (-0.1,0) -- (1.2,0) node[right] {x};
+\draw[->] (0,-0.1) -- (0,1.2) node[above] {y};
+
+% Draw unit circle
+\draw (0,0) circle (1);
+
+% Define angle theta
+\def\theta{60} % degrees
+
+% Draw line for theta
+\draw[thick,blue] (0,0) -- ({cos(\theta)},{sin(\theta)}) node[above right] {$\cos\theta + i\sin\theta$};
+
+% Draw vertical line to real axis (show cos theta)
+\draw[dashed,red] ({cos(\theta)},0) -- ({cos(\theta)},{sin(\theta)}) node[right] {$\sin\theta$};
+\draw[fill] ({cos(\theta)},0) circle (0.5pt) node[below] {$\cos\theta$};
+
+% Draw angle arc
+\draw (0.2,0) arc (0:\theta:0.2);
+\node at ({0.15*cos(\theta/2)},{0.15*sin(\theta/2)}) {$\theta$};
+
+% Optional: label origin
+\draw[fill] (0,0) circle (0.5pt) node[below left] {0};
+
+\end{tikzpicture}
+\end{center}
+\end{rem}
+
+\begin{lem}
+    Let $r, s$ be constructible points. Then $rs$, $\frac{r}{s}$ is constructible.
+\end{lem}
+
+\begin{proof} Let $r$ and $s \neq 0$ be constructible numbers. Draw a line segment of length $r$ (from $0$ to $r$). Then draw a separate line segment of length $1$. Using a compass, construct a triangle similar to a reference triangle where the sides satisfy the proportion: \begin{equation}
+    \frac{rs}{1} = \frac{r}{1} \cdot s
+\end{equation} Realize that the corresponding side of the new triangle has length $rs$. \checkmark
+
+Similarly, to construct $\frac{r}{s}$, \begin{equation}
+    \frac{r}{s} = x \implies x:1 = r:s
+\end{equation} So construct a triangle with sides in proportion $r:s = x:1$. The side length $x = \frac{r}{s}$ is constructible. \checkmark 
+\end{proof} 
+
+\begin{cor}
+    Let $\alpha, \beta$ be constructible points. Then $\alpha\beta$ and $\alpha/\beta$ are constructible points.
+\end{cor}
+
+\begin{cor}
+    The set of constructible points is a subfield of $\C$. Also, $\{ \pm \text{constructible lengths}\}$ is a subfield of $\R$. 
+\end{cor}
+
+\noindent So the natural question emerges of which field extensions are generated by constructible points. Suppose we have $F \subseteq \C$ is a constructible field, and we wish to add a new point. We have three methods to do this: \begin{enumerate}
+    \item Intersect two lines: 
+        \begin{center}
+        \begin{tikzpicture}[scale=2]
+
+            % Draw two intersecting lines
+            \draw (-1.2,-1) -- (0,1.2) node[above] {$a_1x+b_1y=c_1$};
+            \draw (-1,1) -- (1.2,-1) node[right] {$a_2x+b_2y=c_2$};
+            
+            % Intersection point (chosen manually)
+            \coordinate (gamma) at (-0.4,0.47);
+            \fill (gamma) circle (1.5pt) node[above] {$\gamma$};
+            
+            % Points p1 and p2 on first line
+            \coordinate (p2) at (-0.77,-0.2);
+            \coordinate (p1) at (-0.93,-0.5);
+            \fill (p1) circle (1pt) node[left] {$p_1$};
+            \fill (p2) circle (1pt) node[left] {$p_2$};
+            
+            % Points q1 and q2 on second line
+            \coordinate (q1) at (0.32,-0.2);
+            \coordinate (q2) at (0.76,-0.6);
+            \fill (q1) circle (1pt) node[right] {$q_1$};
+            \fill (q2) circle (1pt) node[right] {$q_2$};
+            
+        \end{tikzpicture}
+        \end{center}
+
+    Then $\gamma$ is the solution to: \begin{multline}
+        \begin{aligned}
+        & a_1x + b_1y = c_1 \\
+        & a_2x + b_2y = c_2\\
+    \end{aligned}
+    \end{multline}
+    This implies the components of $\gamma$ lie in a degree $1$ extension of $F$, which implies $\gamma \in F$. 
+    \item Intersect a line and a circle:
+    \begin{center}
+        \begin{tikzpicture}[scale=2]
+
+            % Circle with center q1
+            \coordinate (q1) at (0,0);
+            \def\r{1} % radius
+            \draw (q1) circle (\r);
+            \fill (q1) circle (1.2pt) node[below left] {$q_1$};
+            
+            % Point q2 on the radius
+            \coordinate (q2) at (0,\r);
+            \fill (q2) circle (1pt) node[above] {$q_2$};
+            % \draw (q1) -- (q2);
+            
+            % Line intersecting the circle (off-center, not through q1)
+            \coordinate (A) at (-1.5,-0.2); % endpoint for p1, p2
+            \coordinate (B) at (1.5,0.5);   % opposite endpoint
+            \draw (A) -- (B);
+            
+            % Points p1, p2 at the left end of the line
+            \coordinate (p1) at (-1.5,-0.2);
+            \coordinate (p2) at (-1.3,-0.15);
+            \fill (p1) circle (1pt) node[below left] {$p_1$};
+            \fill (p2) circle (1pt) node[above left] {$p_2$};
+
+            % Points gamma1, gamma2 at the intersection points
+            \coordinate (g1) at (-1,-0.09);
+            \coordinate (g2) at (0.93,0.36);
+            \fill (g1) circle (1pt) node[below right] {$\gamma_1$};
+            \fill (g2) circle (1pt) node[below right] {$\gamma_2$};
+                        
+            \end{tikzpicture}
+    \end{center}    
+
+    So we have that the components of $\gamma_i$ lie in a degree 2 extension of $F$ by the fact that the equation of the circle is $(x-x_0)^2 + (y-y_0)^2 = r^2$.
+
+    \item Intersect two circles:
+    \begin{center}
+        \begin{tikzpicture}[scale=2]
+
+            % First circle, centered at (-0.5,0)
+            \coordinate (c1) at (-0.5,0);
+            \def\rone{1.0}
+            \draw (c1) circle (\rone) node[below left] {$C_1$};
+            
+            % Second circle, centered at (0.5,0)
+            \coordinate (c2) at (0.5,0);
+            \def\rtwo{1.3}
+            \draw (c2) circle (\rtwo) node[below right] {$C_2$};
+            
+            % Intersection points
+            \coordinate (g1) at (-0.35, 0.98);
+            \coordinate (g2) at (-0.35,-0.98);
+            \fill (g1) circle (1pt) node[above] {$\gamma_1$};
+            \fill (g2) circle (1pt) node[below] {$\gamma_2$};
+            
+        \end{tikzpicture}
+    \end{center}    
+    So we have $(x-x_1)^2 + (y-y_1)^2 = r_1^2$ and $(x-x_2)^2 + (y-y_2)^2 = r_2^2$. This is also a quadratic extension.
+\end{enumerate}
+
+\begin{thm}
+    A constructible point has components which lie in a finite tower of extensions of $\Q$ of the form $\Q \subsetneq \Q(\sqrt{a_1}) \subsetneq \Q(\sqrt{a_1}, \sqrt{a_2}) \subsetneq \dots \subsetneq \Q(\sqrt{a_1}, \dots, \sqrt{a_2}) = F$. Note that $[F: \Q] = 2^n$
+\end{thm}
+\begin{proof}
+    So we know that the only new points we can get are in the form: \begin{itemize}
+        \item intersections of two lines
+        \item intersections of a line and a circle
+        \item intersections of two circles
+    \end{itemize}
+    Define $E$ as the field generated over $\Q$ by the coordinates of the currently available points. We can show that the coordinates of any new intersection point lie either in $E$, or a quadratic extension $E(\sqrt{\delta})$ for some $\delta \in E$. We will consider cases:
+    \begin{enumerate}
+        \item \textbf{Two lines}: A line has equation $ax + by + c = 0$, with $a,b,c \in E$. Solving two linear equations gives a unique $(x,y)$ with $x,y \in E$. So intersections of two lines do not actually extend the field in the first place.
+        \item \textbf{Line and circle}: A circle with center $(h,k) \in E^2$ and radius $r \in E$ has equation $(x-h)^2 + (y-k)^2 = r^2$. If we intersect such a line in the form $ax + by + c = 0$, it can reduce to substituting a linear expression for $y$ into the circle equation and obtaining a quadratic equation with coefficients in $E$. So we have that each coordinate of the intersection point is a root of a quadratic polynomial with coefficients in $E$. If the quadratic is reducible over $E$, then the roots lie in $E$. Otherwise, they lie in a quadratic extension $E(\sqrt{\delta})$.
+        \item \textbf{Two circles}: We may subtract the two circle equations to obtain a linear equation in $x,y$ with coefficients in $E$. Then we can substitute the relation back into one circle to get a quadratic equation over $E$. Then we are left with a similar situation as above, where either the coordinates lie in $E$ or in a quadratic extension $E(\sqrt{\delta})$. 
+    \end{enumerate}
+
+    To build a tower, start with $E_0 = \Q$. Perform constructions one at a time. If the $i$-th step needs to adjoin a square root $\sqrt{\delta_i}$, we can define $E_i = E_{i-1}(\sqrt{\delta_i})$. If the new point already has coordinates in $E_{i-1}$, then $E_i = E_{i-1}$. So we have a tower: \begin{equation}
+        \Q = E_0 \subseteq E_1 \subseteq \dots \subseteq E_n = F
+    \end{equation} and each extension $E_i/E_{i-1}$ has degree one or two. If the degree is $2$, we write $E_i = E_{i-1}(\sqrt{a_i})$ for some $a_i \in E_{i-1}$. Thus, since each nontrivial step has degree $2$, the degree $[F:\Q]$ equals the product of the degrees of each step, and is a power of two. $[F:\Q] = 2^n$.
+\end{proof}
+
+We may rephrase this: $\alpha$ is constructible over $\Q$ $\iff$ $\Q = K_0 \subseteq K_1 \subseteq K_2 \subseteq \dots \subseteq K_m = \Q(\alpha)$ with $[K_{i+1}:K_i] = 2$. 
+
+\begin{cor}
+    A regular $n$-gon is constructible $\iff$ $\zeta_n$ is constructible. 
+\end{cor}
+
+\begin{proof} 
+    $\impliedby$: If you can construct the complex number $\zeta_n = \text{cos}(\frac{2\pi}{n}) + i\text{sin}(\frac{2\pi}{n})$ in the plane, then you can place the center at the origin and mark the point $\zeta_n$ on the unit circle. Rotating that point by successive powers $\zeta_n^k$ (or just repeating the compass-and-ruler step of copying the chord/angle) gives all $n$ vertices. So you can construct the whole regular $n$-gon. \checkmark
+
+    \noindent $\implies$: Assume we can construct a given regular $n$-gon. Then given a segment, we can construct a polygon similar to a regular $n$-gon. Equivalently, we can construct the polygon's center and one vertex. Place the polygon so its center is the origin and the vertex is on the unit circle. So the coordinates of that vertex are $(\text{cos}(\frac{2\pi}{n}), \text{sin}(\frac{2\pi}{n}))$. \checkmark
+    
+\end{proof}
+
+\begin{thm}
+    $[\Q(\zeta_n):\Q] = \phi(n)$
+\end{thm}
+
+\begin{proof}
+    Let $K = \Q(\zeta_n)$. First note that if $\sigma: K \hookrightarrow \C$ is a $\Q$-embedding then $\sigma(\zeta_n)^n = \sigma(\zeta_n^n) = \sigma(1) = 1$. So $\sigma(\zeta_n)$ is an $n$-th root of unity. Since $\sigma$ is injective, $|\sigma(\zeta_n)| = |\zeta_n| = n$. So $\sigma(\zeta_n)$ is too a primitive $n$-th root of unity. So every map sends $\zeta_n$ to some $\zeta_n^a$ with $(a,n) = 1$. Since the map is completely determined by where it sends $\zeta_n$, the nuber of distinct $\Q$-embeddings $K \hookrightarrow \C$ is at most the number of primitive $n$-th roots of unity which is just $\phi(n)$. 
+
+    Let $a$ be such that $(a,n) = 1$. Define the map: \begin{equation}
+        \sigma_a: \Q(\zeta_n) \rightarrow \C, \quad \sigma_a\left(\sum_{k=0}^m c_k\zeta_n^k\right) = \sum_{k=0}^m c_k \zeta_n^{ak}
+    \end{equation} for $c_k \in \Q$. This map is a field homomorphism since it is multiplicative on the generators, and linear. The image $\zeta_n^a$ has the same minimal polynomial degree as $\zeta_n$ since it is primitive. So $\sigma_a$ is injective and therefore an embedding. So for every unit $a \in (\Z/n)^\times$, we have an embedding $\sigma_a$. Different residues $a \mod n$ with $(a,n) = 1$ give different images of $\zeta_n$, so different embeddings. Hence, we have at least $\phi(n)$ many embeddings. So from these two observations, we may realize that the number of embeddings is precisely $\phi(n)$. 
+
+    Finally, realize that the number of distinct $\Q$-embeddings $K \hookrightarrow \C = [K:\Q]$. So we have that $[K:\Q] = \phi(n)$.
+\end{proof}
+
+
+\begin{thm}
+    $\zeta_n$ is constructible $\iff$ $\phi(n) = 2^m$ for some $m$.
+\end{thm}
+
+\begin{proof}
+    $\implies$: $\zeta_n$ is constructible $\implies$ $\Q = K_0 \subseteq K_1 \subseteq \dots \subseteq K_m = \Q(\zeta_n)$ such that $[K_{i+1}: K_i] = 2$. This implies $[\Q(\zeta_n): \Q] = 2^m$. But we know $[\Q(\zeta_n): \Q] = \phi(n)$ from the above theorem. \checkmark
+
+    \noindent $\impliedby$: Since $G = \text{Gal}(\Q(\zeta_n):\Q)$ is a finite abelian group of order $\phi(m) = 2^m$, there exists a chain of subgroups: \begin{equation}
+        \langle e \rangle = G_m \leq G_{m-1} \leq \dots \leq G_0 = G
+    \end{equation} such that $[G_{i-1}:G_1] = 2$. Setting $K_i = \Q(\zeta_n)^{G_i}$ shows that $\zeta_n$ is constructible \checkmark
+\end{proof}
+
+\begin{rem}
+    So to find when a regular $n$-gon is constructible, we have reduced it to finding out when $\phi(n) = 2^m$. We know that \begin{align}
+        \phi(n) & = \phi(p_1^{a_1} \cdot \dots \cdot p_k^{a_k}) \\
+        & = \phi(p_1^{a_1}) \cdot \dots \cdot \phi(p_k^{a_k}) \\
+        & = (p_1^{a_1} - p_1^{a_1 - 1}) \cdot \dots \cdot (p_k^{a_k} - p_k^{a_k -1})
+    \end{align} So we've reduced even further to when is $p^j - p^{j-1}$ a power of $2$? If $j \geq 2$, $p | (p^j - p^{j-1}) \implies p = 2$. If $j = 1$, then we need $p-1 = 2^b$ for some $b$. This implies $p = 2^{2^s} - 1$, a Fermat prime. Thus, a regular $n$-gon is constructible if and only if $n = 2^kp_1 \cdot p_2 \cdot \dots \cdot p_r$ for $p_i$, $i \geq 0$ distinct Fermat primes.
+\end{rem}
+
+
+
+%%%%%%%%%%%%%%%%
+\section*{References}
+
+\begin{itemize}
+    \item David S. Dummit and Richard M. Foote, \textit{Abstract Algebra}, 3rd ed., John Wiley \& Sons, Hoboken NJ, 2004.
+    \item Ian N. Stewart, \textit{Galois Theory}, 4th ed., Chapman \& Hall/CRC, New York, 2015.
+    \item Martin Bishop,\textit{Abstract Algebra III – Galois Theory}, Course offered at Northwestern University, Spring 2025.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%
+
+\end{document}  
